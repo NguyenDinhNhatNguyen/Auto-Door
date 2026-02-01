@@ -3,7 +3,8 @@
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 ![Hardware](https://img.shields.io/badge/Hardware-Electronic_Circuit-orange)
 ![Voltage](https://img.shields.io/badge/Voltage-12V_%2F_5V_%2F_3.3V-red)
-![Course](https://img.shields.io/badge/Course-Electronic_Devices_and_Circuits-blue)
+![Firmware](https://img.shields.io/badge/Firmware-Embedded_C_%2F_STM32_HAL-blue)
+![Course](https://img.shields.io/badge/Course-Electronic_Devices_and_Circuits-green)
 
 **Course:** Electronic Devices and Circuits (CE124.Q14)
 
@@ -51,6 +52,8 @@ The system consists of three main stages with specific electrical parameters:
 ### 1. Control Stage (STM32F407VET6)
 * **Operating Voltage:** $3.3V$ DC.
 * **Clock Frequency:** $168 \text{ MHz}$.
+* **Logic Level High ($V_{OH}$):** $3.3V$ (Sufficient to drive L298N Logic Inputs).
+* **GPIO Mode:** Push-Pull Output.
 * **GPIO Output Current:** Max $25 \text{ mA}$ (Sufficient to drive L298N Logic Inputs).
 
 ### 2. Power Driver Stage (L298N H-Bridge)
@@ -76,6 +79,34 @@ The circuit operates by switching the transistor states within the L298N H-Bridg
 | **Holding Open** | (Delay 3s) | `LOW` / `LOW` | All OFF | **Stop (Coast)** |
 | **User Away** | $d \ge 15 \text{ cm}$ | `LOW` / `HIGH` | Q2, Q3 ON | **Reverse (Close)** |
 
+## 💻 Firmware & Hardware Interface
+
+Although this is a hardware-centric project, **Firmware** is essential to generate the correct **Electrical Control Signals**. The STM32 is programmed in **Embedded C** using the **HAL Library** to manage the state of the GPIO pins.
+
+### Control Logic Implementation
+The firmware implements a **Finite State Machine (FSM)** to control the voltage levels at pins `PB0` and `PB1`, determining the conduction state of the transistors inside the L298N.
+
+```c
+/* LOGIC TABLE FOR L298N CONTROL */
+// PB0 = High (3.3V), PB1 = Low (0V)  -> Current flows A to B -> Motor Opens
+// PB0 = Low (0V),  PB1 = High (3.3V) -> Current flows B to A -> Motor Closes
+
+if (Distance < 15) // Sensor Input
+{
+    // Action: OPEN DOOR
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);   // PB0 -> 3.3V
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // PB1 -> 0V
+    
+    HAL_Delay(3000); // Hold state for 3 seconds
+}
+else
+{
+    // Action: CLOSE DOOR
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET); // PB0 -> 0V
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // PB1 -> 3.3V
+}
+```
+
 ## ⚙️ Installation & Setup
 
 1.  **Clone the Repository:**
@@ -90,7 +121,7 @@ The circuit operates by switching the transistor states within the L298N H-Bridg
 3.  **Flash Firmware:**
     * Load the `.elf` file using STM32CubeIDE or ST-Link Utility.
 
-## 👥 Contributors & Roles 
+## 👥 Contributors & Roles
 
 | Student Name | ID | Role | Responsibilities |
 | :--- | :--- | :--- | :--- |
