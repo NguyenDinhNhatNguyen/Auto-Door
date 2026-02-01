@@ -90,7 +90,7 @@ The circuit operates by switching the transistor states within the L298N H-Bridg
 3.  **Flash Firmware:**
     * Load the `.elf` file using STM32CubeIDE or ST-Link Utility.
 
-## 👥 Contributors & Roles (Group 5)
+## 👥 Contributors & Roles 
 
 | Student Name | ID | Role | Responsibilities |
 | :--- | :--- | :--- | :--- |
