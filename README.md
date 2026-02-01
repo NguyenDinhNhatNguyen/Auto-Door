@@ -5,7 +5,7 @@
 ![Voltage](https://img.shields.io/badge/Voltage-12V_%2F_5V_%2F_3.3V-red)
 ![Course](https://img.shields.io/badge/Course-Electronic_Devices_and_Circuits-blue)
 
-**Course:** Electronic Devices and Circuits (Các thiết bị và mạch điện tử)
+**Course:** Electronic Devices and Circuits (CE124.Q14)
 
 **Institution:** University of Information Technology (UIT) - VNU-HCM
 
